@@ -9,7 +9,7 @@ Analysis system for bitcoin mining immersion-cooled site telemetry. Processes mi
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install pandas numpy scipy
+pip install -r requirements.txt
 python main.py
 ```
 
