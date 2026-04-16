@@ -7,7 +7,8 @@
       "severity": "critical",
       "detail": "Chip temperature exceeded 90.0\u00b0C in 33.3% of readings (max 92.0\u00b0C).",
       "metric": 92.0,
-      "action": "Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation."
+      "action": "Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation.",
+      "business_impact": "Est. ~10 TH/s lost to throttling during critical periods (33% of time). ~$0.15/day revenue impact."
     },
     {
       "miner_id": "M001",
@@ -31,7 +32,8 @@
       "severity": "critical",
       "detail": "Chip temperature exceeded 90.0\u00b0C in 33.3% of readings (max 98.0\u00b0C).",
       "metric": 98.0,
-      "action": "Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation."
+      "action": "Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation.",
+      "business_impact": "Est. ~40 TH/s lost to throttling during critical periods (33% of time). ~$0.60/day revenue impact."
     },
     {
       "miner_id": "M003",

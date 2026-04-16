@@ -108,6 +108,14 @@ PEER_WARNING_PCT = 10  # % anomalous readings — warning severity
 HASHRATE_HEADROOM_TOLERANCE = 1.05  # 5% above fleet avg to count as "benefiting"
 EXCESSIVE_COOLING_RATIO = 0.90  # immersion temp below 90% of fleet avg
 
+# Business impact estimation
+# Source: No economics data in the provided dataset. Hash price is the revenue
+# earned per TH/s of hashrate per day — it encapsulates BTC price, network
+# difficulty, and block reward into a single operational metric.
+# ~$0.045/TH/day is approximate as of early 2025. In production, this would
+# be fetched from mempool.space or a similar API.
+HASH_PRICE_USD_PER_TH_DAY = 0.045  # $/TH/day — assumed hash price
+
 # ---------------------------------------------------------------------------
 # Types
 # ---------------------------------------------------------------------------

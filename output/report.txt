@@ -2,14 +2,21 @@
   MINING SITE OPERATIONAL ANALYSIS — INSIGHTS REPORT
 ================================================================================
 
-Generated: 2026-04-16 16:14:03
+Generated: 2026-04-16 17:01:54
 Data: 3 miners, 10 min, 9 observations
 ────────────────────────────────────────────────────────────────────────────────
+
+DATA QUALITY
+──────────────
+  ⚠ Only 3 readings per miner. Correlation and trend analyses require longer observation windows.
+  ⚠ Dataset spans only 10 min. Sustained deviation and cooling trend detection need ≥1 hour of data.
+  ✓ No missing values detected.
 
 1. HARDWARE RISK
 ────────────────
   [CRITICAL] M001 — Critical Temperature
     Chip temperature exceeded 90.0°C in 33.3% of readings (max 92.0°C).
+    ▸ Impact: Est. ~10 TH/s lost to throttling during critical periods (33% of time). ~$0.15/day revenue impact.
     ▸ Action: Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation.
 
   [CRITICAL] M001 — Rapid Temperature Rise
@@ -18,6 +25,7 @@ Data: 3 miners, 10 min, 9 observations
 
   [CRITICAL] M003 — Critical Temperature
     Chip temperature exceeded 90.0°C in 33.3% of readings (max 98.0°C).
+    ▸ Impact: Est. ~40 TH/s lost to throttling during critical periods (33% of time). ~$0.60/day revenue impact.
     ▸ Action: Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation.
 
   [CRITICAL] M003 — Rapid Temperature Rise

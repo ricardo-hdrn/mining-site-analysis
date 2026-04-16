@@ -102,6 +102,10 @@ def _format_insight(insight: dict) -> str:
     for dline in detail.split("\n"):
         lines.append(f"    {dline.strip()}")
 
+    impact = insight.get("business_impact", "")
+    if impact:
+        lines.append(f"    \u25b8 Impact: {impact}")
+
     action = insight.get("action", "")
     if action:
         lines.append(f"    \u25b8 Action: {action}")
@@ -118,6 +122,47 @@ def _sort_insights(insights: list[dict]) -> list[dict]:
             i.get("miner_id", ""),
         ),
     )
+
+
+# ---------------------------------------------------------------------------
+# Data quality assessment
+# ---------------------------------------------------------------------------
+
+
+def _assess_data_quality(df: pd.DataFrame) -> list[str]:
+    """Check dataset quality and return warning/ok messages."""
+    notes: list[str] = []
+    n_miners = df["miner_id"].nunique()
+    rows_per_miner = len(df) / max(n_miners, 1)
+    time_span = df["timestamp"].max() - df["timestamp"].min()
+    total_min = time_span.total_seconds() / 60
+    missing_pct = df.isna().sum().sum() / df.size * 100
+
+    if rows_per_miner < 10:
+        notes.append(
+            f"\u26a0 Only {rows_per_miner:.0f} readings per miner. "
+            f"Correlation and trend analyses require longer observation windows."
+        )
+    if total_min < 60:
+        notes.append(
+            f"\u26a0 Dataset spans only {total_min:.0f} min. "
+            f"Sustained deviation and cooling trend detection need \u22651 hour of data."
+        )
+    if n_miners < 3:
+        notes.append(
+            f"\u26a0 Only {n_miners} miner(s) — peer comparison has limited statistical power."
+        )
+    if missing_pct > 5:
+        notes.append(f"\u26a0 {missing_pct:.1f}% missing values detected across the dataset.")
+    elif missing_pct > 0:
+        notes.append(f"\u2139 {missing_pct:.1f}% missing values — handled via NaN-safe operations.")
+    else:
+        notes.append("\u2713 No missing values detected.")
+
+    if rows_per_miner >= 10 and total_min >= 60 and n_miners >= 3:
+        notes.append("\u2713 Dataset size is sufficient for all analyses.")
+
+    return notes
 
 
 # ---------------------------------------------------------------------------
@@ -151,6 +196,14 @@ def build_report(
     lines.append(f"Generated: {generated_at}")
     lines.append(f"Data: {n_miners} miners, {span_str}, {n_obs:,} observations")
     lines.append(THIN_LINE)
+    lines.append("")
+
+    # --- Data quality notes ---
+    quality_notes = _assess_data_quality(df)
+    lines.append("DATA QUALITY")
+    lines.append("\u2500" * 14)
+    for note in quality_notes:
+        lines.append(f"  {note}")
     lines.append("")
 
     # Flatten for counting / summary later
