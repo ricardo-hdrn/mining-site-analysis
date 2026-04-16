@@ -1,0 +1,57 @@
+================================================================================
+  MINING SITE OPERATIONAL ANALYSIS — INSIGHTS REPORT
+================================================================================
+
+Generated: 2026-04-16 16:14:03
+Data: 3 miners, 10 min, 9 observations
+────────────────────────────────────────────────────────────────────────────────
+
+1. HARDWARE RISK
+────────────────
+  [CRITICAL] M001 — Critical Temperature
+    Chip temperature exceeded 90.0°C in 33.3% of readings (max 92.0°C).
+    ▸ Action: Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation.
+
+  [CRITICAL] M001 — Rapid Temperature Rise
+    Chip temperature rose 14.0°C within ~10 min (at 2025-01-01 10:10:00+00:00).
+    ▸ Action: Possible coolant flow interruption or pump failure. Inspect immersion loop immediately.
+
+  [CRITICAL] M003 — Critical Temperature
+    Chip temperature exceeded 90.0°C in 33.3% of readings (max 98.0°C).
+    ▸ Action: Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation.
+
+  [CRITICAL] M003 — Rapid Temperature Rise
+    Chip temperature rose 18.0°C within ~10 min (at 2025-01-01 10:10:00+00:00).
+    ▸ Action: Possible coolant flow interruption or pump failure. Inspect immersion loop immediately.
+
+  [INFO] M001 — Time Above Threshold
+    Miner spent ~5 minutes above 85.0°C warning threshold.
+    ▸ Action: Review cooling capacity allocation for this miner.
+
+  [INFO] M003 — Time Above Threshold
+    Miner spent ~5 minutes above 85.0°C warning threshold.
+    ▸ Action: Review cooling capacity allocation for this miner.
+
+2. COOLING SYSTEM
+─────────────────
+  [WARNING] M003 — Pressure Anomaly
+    Pressure spike detected: Δ=0.300 bar in ~10 min at 2025-01-01 10:10:00+00:00.
+    ▸ Action: Check for leaks, blockages, or pump cavitation in the immersion cooling loop.
+
+================================================================================
+  EXECUTIVE SUMMARY
+================================================================================
+
+Insights by severity:
+  CRITICAL    4
+  WARNING     1
+  INFO        2
+  TOTAL       7
+
+Top priority actions:
+  1. [CRITICAL] M001: Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation.
+  2. [CRITICAL] M001: Possible coolant flow interruption or pump failure. Inspect immersion loop immediately.
+  3. [CRITICAL] M003: Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation.
+
+Fleet health score: 1/3 miners with no issues (33%)
+────────────────────────────────────────────────────────────────────────────────

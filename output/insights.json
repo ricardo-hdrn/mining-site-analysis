@@ -1,0 +1,65 @@
+{
+  "performance": [],
+  "hardware_risk": [
+    {
+      "miner_id": "M001",
+      "type": "critical_temperature",
+      "severity": "critical",
+      "detail": "Chip temperature exceeded 90.0\u00b0C in 33.3% of readings (max 92.0\u00b0C).",
+      "metric": 92.0,
+      "action": "Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation."
+    },
+    {
+      "miner_id": "M001",
+      "type": "rapid_temperature_rise",
+      "severity": "critical",
+      "detail": "Chip temperature rose 14.0\u00b0C within ~10 min (at 2025-01-01 10:10:00+00:00).",
+      "metric": 14.0,
+      "action": "Possible coolant flow interruption or pump failure. Inspect immersion loop immediately."
+    },
+    {
+      "miner_id": "M001",
+      "type": "time_above_threshold",
+      "severity": "info",
+      "detail": "Miner spent ~5 minutes above 85.0\u00b0C warning threshold.",
+      "metric": 5.0,
+      "action": "Review cooling capacity allocation for this miner."
+    },
+    {
+      "miner_id": "M003",
+      "type": "critical_temperature",
+      "severity": "critical",
+      "detail": "Chip temperature exceeded 90.0\u00b0C in 33.3% of readings (max 98.0\u00b0C).",
+      "metric": 98.0,
+      "action": "Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation."
+    },
+    {
+      "miner_id": "M003",
+      "type": "rapid_temperature_rise",
+      "severity": "critical",
+      "detail": "Chip temperature rose 18.0\u00b0C within ~10 min (at 2025-01-01 10:10:00+00:00).",
+      "metric": 18.0,
+      "action": "Possible coolant flow interruption or pump failure. Inspect immersion loop immediately."
+    },
+    {
+      "miner_id": "M003",
+      "type": "time_above_threshold",
+      "severity": "info",
+      "detail": "Miner spent ~5 minutes above 85.0\u00b0C warning threshold.",
+      "metric": 5.0,
+      "action": "Review cooling capacity allocation for this miner."
+    }
+  ],
+  "cooling": [
+    {
+      "miner_id": "M003",
+      "type": "pressure_anomaly",
+      "severity": "warning",
+      "detail": "Pressure spike detected: \u0394=0.300 bar in ~10 min at 2025-01-01 10:10:00+00:00.",
+      "metric": 0.3,
+      "action": "Check for leaks, blockages, or pump cavitation in the immersion cooling loop."
+    }
+  ],
+  "peer_comparison": [],
+  "optimization": []
+}
