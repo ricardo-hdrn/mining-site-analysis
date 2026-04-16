@@ -31,12 +31,20 @@ Output is written to:
 ## Project Structure
 
 ```
-├── main.py                  # Entry point — load data, run analyzers, generate report
+├── main.py                          # Entry point — load data, run analyzers, generate report
 ├── src/
-│   ├── data_generator.py    # Generates realistic 7-day, 10-miner telemetry dataset
-│   └── analyzers.py         # Five analyzer modules matching the assessment categories
+│   ├── data_generator.py            # Generates realistic 7-day, 10-miner telemetry dataset
+│   └── analyzers/
+│       ├── __init__.py              # run_all_analyzers — orchestrates detection + enrichment
+│       ├── base.py                  # Shared constants, thresholds, types, helpers
+│       ├── performance.py           # Hashrate-temp correlation, baseline deviation
+│       ├── hardware_risk.py         # Thermal thresholds, rapid spikes, time above limit
+│       ├── cooling.py               # Pressure anomalies, cooling degradation/ineffective
+│       ├── peer_comparison.py       # Fleet median comparison, repeated daily patterns
+│       ├── optimization.py          # Thermal headroom, excessive cooling, efficiency score
+│       └── business_impact.py       # Post-detection enrichment — revenue impact estimates
 ├── data/
-│   └── site_telemetry.csv   # Generated telemetry (20,160 rows)
+│   └── site_telemetry.csv           # Provided sample dataset (9 rows)
 └── output/
     ├── insights.json         # Structured analysis results
     └── report.txt            # Human-readable report
