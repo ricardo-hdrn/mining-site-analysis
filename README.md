@@ -1,5 +1,7 @@
 # Mining Site Operational Analysis
 
+[![CI](https://github.com/ricardo-hdrn/mining-site-analysis/actions/workflows/ci.yml/badge.svg)](https://github.com/ricardo-hdrn/mining-site-analysis/actions/workflows/ci.yml)
+
 Analysis system for bitcoin mining immersion-cooled site telemetry. Processes miner hashrate, chip temperature, and immersion cooling data to produce actionable, decision-oriented insights.
 
 ## Setup & Run
