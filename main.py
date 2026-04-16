@@ -19,8 +19,8 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.data_generator import generate_site_data
 from src.analyzers import run_all_analyzers
+from src.data_generator import generate_site_data
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -60,6 +60,7 @@ THIN_LINE = "\u2500" * LINE_WIDTH
 # Data loading / generation
 # ---------------------------------------------------------------------------
 
+
 def load_data(path: Path | None = None) -> pd.DataFrame:
     """Load CSV from the given path, falling back to the default data path."""
     target = path or DATA_PATH
@@ -87,6 +88,7 @@ def generate_and_save() -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 # Insight formatting
 # ---------------------------------------------------------------------------
+
 
 def _format_insight(insight: dict) -> str:
     """Render a single insight as a multi-line block."""
@@ -122,6 +124,7 @@ def _sort_insights(insights: list[dict]) -> list[dict]:
 # Report building
 # ---------------------------------------------------------------------------
 
+
 def build_report(
     results: dict[str, list[dict]],
     df: pd.DataFrame,
@@ -136,7 +139,9 @@ def build_report(
         span_str = f"{time_span.days} days"
     else:
         total_min = int(time_span.total_seconds() / 60)
-        span_str = f"{total_min // 60}h {total_min % 60}m" if total_min >= 60 else f"{total_min} min"
+        span_str = (
+            f"{total_min // 60}h {total_min % 60}m" if total_min >= 60 else f"{total_min} min"
+        )
 
     lines: list[str] = []
     lines.append(DOUBLE_LINE)
@@ -208,8 +213,7 @@ def build_report(
     healthy = n_miners - len(miners_with_issues)
     health_pct = healthy / n_miners * 100 if n_miners else 0
     lines.append(
-        f"Fleet health score: {healthy}/{n_miners} miners with no "
-        f"issues ({health_pct:.0f}%)"
+        f"Fleet health score: {healthy}/{n_miners} miners with no issues ({health_pct:.0f}%)"
     )
     lines.append(THIN_LINE)
 
@@ -219,6 +223,7 @@ def build_report(
 # ---------------------------------------------------------------------------
 # JSON serialisation helper
 # ---------------------------------------------------------------------------
+
 
 def _serialise_results(results: dict[str, list[dict]]) -> dict:
     """Make the results dict JSON-safe."""
@@ -239,6 +244,7 @@ def _serialise_results(results: dict[str, list[dict]]) -> dict:
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

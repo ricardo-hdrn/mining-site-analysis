@@ -33,45 +33,49 @@ def analyze_optimization(df: pd.DataFrame) -> list[Insight]:
         if row["mean_chip_temp"] < COOL_UNDERUTILISED_TEMP:
             headroom = CHIP_TEMP_WARNING - row["mean_chip_temp"]
             if row["mean_hashrate"] <= fleet_avg_hashrate * HASHRATE_HEADROOM_TOLERANCE:
-                insights.append({
-                    "miner_id": miner_id,
-                    "type": "thermal_headroom",
-                    "severity": "info",
-                    "detail": (
-                        f"Operating at {row['mean_chip_temp']:.1f}°C — "
-                        f"{headroom:.1f}°C below warning threshold — yet "
-                        f"hashrate ({row['mean_hashrate']:.1f} TH/s) is not "
-                        f"above fleet average ({fleet_avg_hashrate:.1f} TH/s)."
-                    ),
-                    "metric": round(float(headroom), 2),
-                    "action": (
-                        f"Consider overclocking {miner_id} to utilise "
-                        f"available thermal headroom, or redistribute "
-                        f"cooling capacity to hotter miners."
-                    ),
-                })
+                insights.append(
+                    {
+                        "miner_id": miner_id,
+                        "type": "thermal_headroom",
+                        "severity": "info",
+                        "detail": (
+                            f"Operating at {row['mean_chip_temp']:.1f}°C — "
+                            f"{headroom:.1f}°C below warning threshold — yet "
+                            f"hashrate ({row['mean_hashrate']:.1f} TH/s) is not "
+                            f"above fleet average ({fleet_avg_hashrate:.1f} TH/s)."
+                        ),
+                        "metric": round(float(headroom), 2),
+                        "action": (
+                            f"Consider overclocking {miner_id} to utilise "
+                            f"available thermal headroom, or redistribute "
+                            f"cooling capacity to hotter miners."
+                        ),
+                    }
+                )
 
         # --- excessive cooling ---
         if (
             row["mean_immersion_temp"] < fleet_avg_immersion * EXCESSIVE_COOLING_RATIO
             and row["mean_hashrate"] <= fleet_avg_hashrate
         ):
-            insights.append({
-                "miner_id": miner_id,
-                "type": "excessive_cooling",
-                "severity": "info",
-                "detail": (
-                    f"Immersion temp ({row['mean_immersion_temp']:.1f}°C) is "
-                    f"well below fleet average ({fleet_avg_immersion:.1f}°C) "
-                    f"but hashrate ({row['mean_hashrate']:.1f} TH/s) is not "
-                    f"better than fleet average."
-                ),
-                "metric": round(float(row["mean_immersion_temp"]), 2),
-                "action": (
-                    f"{miner_id} could share cooling capacity with hotter "
-                    f"miners. Reduce cooling to {miner_id} to save energy."
-                ),
-            })
+            insights.append(
+                {
+                    "miner_id": miner_id,
+                    "type": "excessive_cooling",
+                    "severity": "info",
+                    "detail": (
+                        f"Immersion temp ({row['mean_immersion_temp']:.1f}°C) is "
+                        f"well below fleet average ({fleet_avg_immersion:.1f}°C) "
+                        f"but hashrate ({row['mean_hashrate']:.1f} TH/s) is not "
+                        f"better than fleet average."
+                    ),
+                    "metric": round(float(row["mean_immersion_temp"]), 2),
+                    "action": (
+                        f"{miner_id} could share cooling capacity with hotter "
+                        f"miners. Reduce cooling to {miner_id} to save energy."
+                    ),
+                }
+            )
 
         # --- cooling efficiency score (collect for outlier detection) ---
         # -- TH/s per °C of gradient. Higher = more productive work per unit of thermal load
@@ -87,20 +91,22 @@ def analyze_optimization(df: pd.DataFrame) -> list[Insight]:
         for miner_id, score in scores_by_miner.items():
             # if the score of that miner is less than the Std deviation, it's underperforming
             if fleet_std_score > 0 and score < fleet_mean_score - fleet_std_score:
-                insights.append({
-                    "miner_id": miner_id,
-                    "type": "low_cooling_efficiency",
-                    "severity": "warning",
-                    "detail": (
-                        f"Cooling efficiency score {score:.2f} TH/s per °C "
-                        f"— below fleet average ({fleet_mean_score:.2f}). "
-                        f"High thermal gradient relative to hashrate output."
-                    ),
-                    "metric": round(float(score), 4),
-                    "action": (
-                        "Investigate coolant flow rate, thermal interface, "
-                        "or degraded ASIC boards."
-                    ),
-                })
+                insights.append(
+                    {
+                        "miner_id": miner_id,
+                        "type": "low_cooling_efficiency",
+                        "severity": "warning",
+                        "detail": (
+                            f"Cooling efficiency score {score:.2f} TH/s per °C "
+                            f"— below fleet average ({fleet_mean_score:.2f}). "
+                            f"High thermal gradient relative to hashrate output."
+                        ),
+                        "metric": round(float(score), 4),
+                        "action": (
+                            "Investigate coolant flow rate, thermal interface, "
+                            "or degraded ASIC boards."
+                        ),
+                    }
+                )
 
     return insights

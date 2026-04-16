@@ -5,19 +5,18 @@ the corresponding analyzer detects it with the expected type and severity.
 """
 
 import pandas as pd
-import pytest
 
-from src.analyzers.performance import analyze_performance
-from src.analyzers.hardware_risk import analyze_hardware_risk
-from src.analyzers.cooling import analyze_cooling
-from src.analyzers.peer_comparison import analyze_peers
-from src.analyzers.optimization import analyze_optimization
 from src.analyzers import run_all_analyzers
-
+from src.analyzers.cooling import analyze_cooling
+from src.analyzers.hardware_risk import analyze_hardware_risk
+from src.analyzers.optimization import analyze_optimization
+from src.analyzers.peer_comparison import analyze_peers
+from src.analyzers.performance import analyze_performance
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_df(rows: list[dict]) -> pd.DataFrame:
     """Build a DataFrame from row dicts with proper types."""
@@ -26,9 +25,15 @@ def _make_df(rows: list[dict]) -> pd.DataFrame:
     return df
 
 
-def _stable_miner(miner_id: str, n: int = 60, start: str = "2025-01-01T00:00:00Z",
-                   hashrate: float = 110, chip_temp: float = 75,
-                   immersion_temp: float = 52, pressure: float = 1.8) -> list[dict]:
+def _stable_miner(
+    miner_id: str,
+    n: int = 60,
+    start: str = "2025-01-01T00:00:00Z",
+    hashrate: float = 110,
+    chip_temp: float = 75,
+    immersion_temp: float = 52,
+    pressure: float = 1.8,
+) -> list[dict]:
     """Generate n rows of stable readings for a single miner."""
     timestamps = pd.date_range(start, periods=n, freq="5min")
     return [
@@ -48,6 +53,7 @@ def _stable_miner(miner_id: str, n: int = 60, start: str = "2025-01-01T00:00:00Z
 # Performance
 # ===========================================================================
 
+
 class TestPerformance:
     def test_detects_hashrate_temp_correlation(self):
         """Miner with hashrate inversely tracking chip temp should be flagged."""
@@ -55,14 +61,16 @@ class TestPerformance:
         timestamps = pd.date_range("2025-01-01", periods=20, freq="5min")
         for i, ts in enumerate(timestamps):
             # Temp rises linearly, hashrate drops linearly
-            rows.append({
-                "timestamp": ts.isoformat(),
-                "miner_id": "M001",
-                "hashrate_ths": 120 - i * 3,
-                "chip_temp_c": 70 + i * 2,
-                "immersion_temp_c": 52,
-                "immersion_pressure_bar": 1.8,
-            })
+            rows.append(
+                {
+                    "timestamp": ts.isoformat(),
+                    "miner_id": "M001",
+                    "hashrate_ths": 120 - i * 3,
+                    "chip_temp_c": 70 + i * 2,
+                    "immersion_temp_c": 52,
+                    "immersion_pressure_bar": 1.8,
+                }
+            )
         insights = analyze_performance(_make_df(rows))
         types = [i["type"] for i in insights]
         assert "performance_degradation" in types
@@ -96,6 +104,7 @@ class TestPerformance:
 # ===========================================================================
 # Hardware Risk
 # ===========================================================================
+
 
 class TestHardwareRisk:
     def test_critical_temperature(self):
@@ -143,6 +152,7 @@ class TestHardwareRisk:
 # Cooling
 # ===========================================================================
 
+
 class TestCooling:
     def test_pressure_spike(self):
         """A 0.5 bar pressure jump should be flagged."""
@@ -164,14 +174,16 @@ class TestCooling:
         rows = []
         timestamps = pd.date_range("2025-01-01", periods=20, freq="5min")
         for i, ts in enumerate(timestamps):
-            rows.append({
-                "timestamp": ts.isoformat(),
-                "miner_id": "M001",
-                "hashrate_ths": 110,
-                "chip_temp_c": 75,  # stable
-                "immersion_temp_c": 50 + i * 0.5,  # rising fast
-                "immersion_pressure_bar": 1.8,
-            })
+            rows.append(
+                {
+                    "timestamp": ts.isoformat(),
+                    "miner_id": "M001",
+                    "hashrate_ths": 110,
+                    "chip_temp_c": 75,  # stable
+                    "immersion_temp_c": 50 + i * 0.5,  # rising fast
+                    "immersion_pressure_bar": 1.8,
+                }
+            )
         insights = analyze_cooling(_make_df(rows))
         degradation = [i for i in insights if i["type"] == "cooling_degradation"]
         assert len(degradation) == 1
@@ -181,6 +193,7 @@ class TestCooling:
 # Peer Comparison
 # ===========================================================================
 
+
 class TestPeerComparison:
     def test_detects_underperformer(self):
         """One miner consistently below peers should be flagged."""
@@ -188,14 +201,16 @@ class TestPeerComparison:
         timestamps = pd.date_range("2025-01-01", periods=20, freq="5min")
         for ts in timestamps:
             for mid, hr in [("M001", 110), ("M002", 108), ("M003", 80)]:
-                rows.append({
-                    "timestamp": ts.isoformat(),
-                    "miner_id": mid,
-                    "hashrate_ths": hr,
-                    "chip_temp_c": 75,
-                    "immersion_temp_c": 52,
-                    "immersion_pressure_bar": 1.8,
-                })
+                rows.append(
+                    {
+                        "timestamp": ts.isoformat(),
+                        "miner_id": mid,
+                        "hashrate_ths": hr,
+                        "chip_temp_c": 75,
+                        "immersion_temp_c": 52,
+                        "immersion_pressure_bar": 1.8,
+                    }
+                )
         insights = analyze_peers(_make_df(rows))
         flagged = [i for i in insights if i["type"] == "peer_underperformance"]
         assert any(i["miner_id"] == "M003" for i in flagged)
@@ -206,14 +221,16 @@ class TestPeerComparison:
         timestamps = pd.date_range("2025-01-01", periods=10, freq="5min")
         for ts in timestamps:
             for mid in ["M001", "M002", "M003"]:
-                rows.append({
-                    "timestamp": ts.isoformat(),
-                    "miner_id": mid,
-                    "hashrate_ths": 110,
-                    "chip_temp_c": 75,
-                    "immersion_temp_c": 52,
-                    "immersion_pressure_bar": 1.8,
-                })
+                rows.append(
+                    {
+                        "timestamp": ts.isoformat(),
+                        "miner_id": mid,
+                        "hashrate_ths": 110,
+                        "chip_temp_c": 75,
+                        "immersion_temp_c": 52,
+                        "immersion_pressure_bar": 1.8,
+                    }
+                )
         insights = analyze_peers(_make_df(rows))
         flagged = [i for i in insights if i["type"] == "peer_underperformance"]
         assert len(flagged) == 0
@@ -224,14 +241,16 @@ class TestPeerComparison:
         timestamps = pd.date_range("2025-01-01", periods=3 * 24 * 12, freq="5min")  # 3 days
         for ts in timestamps:
             for mid, hr in [("M001", 110), ("M002", 108), ("M003", 80)]:
-                rows.append({
-                    "timestamp": ts.isoformat(),
-                    "miner_id": mid,
-                    "hashrate_ths": hr,
-                    "chip_temp_c": 75,
-                    "immersion_temp_c": 52,
-                    "immersion_pressure_bar": 1.8,
-                })
+                rows.append(
+                    {
+                        "timestamp": ts.isoformat(),
+                        "miner_id": mid,
+                        "hashrate_ths": hr,
+                        "chip_temp_c": 75,
+                        "immersion_temp_c": 52,
+                        "immersion_pressure_bar": 1.8,
+                    }
+                )
         insights = analyze_peers(_make_df(rows))
         repeated = [i for i in insights if i["type"] == "peer_anomaly_repeated_daily"]
         assert any(i["miner_id"] == "M003" for i in repeated)
@@ -241,13 +260,14 @@ class TestPeerComparison:
 # Optimization
 # ===========================================================================
 
+
 class TestOptimization:
     def test_thermal_headroom(self):
         """Overcooled miner with no hashrate benefit should be flagged."""
         rows = (
-            _stable_miner("M001", n=20, chip_temp=75, hashrate=110) +
-            _stable_miner("M002", n=20, chip_temp=75, hashrate=110) +
-            _stable_miner("M003", n=20, chip_temp=60, hashrate=108, immersion_temp=42)
+            _stable_miner("M001", n=20, chip_temp=75, hashrate=110)
+            + _stable_miner("M002", n=20, chip_temp=75, hashrate=110)
+            + _stable_miner("M003", n=20, chip_temp=60, hashrate=108, immersion_temp=42)
         )
         insights = analyze_optimization(_make_df(rows))
         headroom = [i for i in insights if i["type"] == "thermal_headroom"]
@@ -255,9 +275,8 @@ class TestOptimization:
 
     def test_no_headroom_on_hot_miner(self):
         """Miner running at 80°C should not be flagged for thermal headroom."""
-        rows = (
-            _stable_miner("M001", n=20, chip_temp=80, hashrate=110) +
-            _stable_miner("M002", n=20, chip_temp=80, hashrate=110)
+        rows = _stable_miner("M001", n=20, chip_temp=80, hashrate=110) + _stable_miner(
+            "M002", n=20, chip_temp=80, hashrate=110
         )
         insights = analyze_optimization(_make_df(rows))
         headroom = [i for i in insights if i["type"] == "thermal_headroom"]
@@ -266,9 +285,11 @@ class TestOptimization:
     def test_low_cooling_efficiency(self):
         """Miner with much higher thermal gradient should be flagged."""
         rows = (
-            _stable_miner("M001", n=20, chip_temp=75, immersion_temp=52, hashrate=110) +
-            _stable_miner("M002", n=20, chip_temp=75, immersion_temp=52, hashrate=110) +
-            _stable_miner("M003", n=20, chip_temp=95, immersion_temp=52, hashrate=80)  # big gradient, low hashrate
+            _stable_miner("M001", n=20, chip_temp=75, immersion_temp=52, hashrate=110)
+            + _stable_miner("M002", n=20, chip_temp=75, immersion_temp=52, hashrate=110)
+            + _stable_miner(
+                "M003", n=20, chip_temp=95, immersion_temp=52, hashrate=80
+            )  # big gradient, low hashrate
         )
         insights = analyze_optimization(_make_df(rows))
         low_eff = [i for i in insights if i["type"] == "low_cooling_efficiency"]
@@ -279,14 +300,18 @@ class TestOptimization:
 # Integration — run_all_analyzers
 # ===========================================================================
 
+
 class TestRunAll:
     def test_returns_all_categories(self):
         """run_all_analyzers should return all 5 category keys."""
         rows = _stable_miner("M001", n=10)
         results = run_all_analyzers(_make_df(rows))
         assert set(results.keys()) == {
-            "performance", "hardware_risk", "cooling",
-            "peer_comparison", "optimization",
+            "performance",
+            "hardware_risk",
+            "cooling",
+            "peer_comparison",
+            "optimization",
         }
 
     def test_each_category_returns_list(self):

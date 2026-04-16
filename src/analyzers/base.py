@@ -34,8 +34,8 @@ import pandas as pd
 # Source: Bitmain S19/S21 datasheet max junction ~95-105°C. Warning at 85°C
 # gives operational margin; critical at 90°C is ~5°C below hard limits.
 # Immersion allows ~5°C higher than air-cooled (~80°C) due to better dissipation.
-CHIP_TEMP_WARNING = 85.0        # °C — warning threshold
-CHIP_TEMP_CRITICAL = 90.0       # °C — critical threshold
+CHIP_TEMP_WARNING = 85.0  # °C — warning threshold
+CHIP_TEMP_CRITICAL = 90.0  # °C — critical threshold
 # Source: Normal reading-to-reading fluctuation is ±1-2°C. A 5°C jump in 10 min
 # is a step-change (pump failure, flow interruption), not gradual drift.
 # Two detection windows serve different purposes:
@@ -47,8 +47,8 @@ CHIP_TEMP_CRITICAL = 90.0       # °C — critical threshold
 #     hashrate underperformance. A 5-min dip is normal variance (pool latency,
 #     share luck). 30 min of continuous deviation = real operational issue.
 # Short window → acute events.  Long window → chronic problems.
-RAPID_TEMP_RISE = 5.0           # °C — threshold
-RAPID_TEMP_WINDOW_MIN = 10      # minutes — acute event detection window
+RAPID_TEMP_RISE = 5.0  # °C — threshold
+RAPID_TEMP_WINDOW_MIN = 10  # minutes — acute event detection window
 # Source: 15°C below warning threshold. In immersion, this much headroom
 # means cooling energy is being wasted on this miner.
 COOL_UNDERUTILISED_TEMP = 70.0  # °C — well below thermal limits
@@ -56,7 +56,7 @@ COOL_UNDERUTILISED_TEMP = 70.0  # °C — well below thermal limits
 # Hashrate thresholds
 # Source: ±10% is standard industrial SPC for "out of normal range."
 # 20% is severe — likely hardware failure, not sensor noise.
-HASHRATE_DEVIATION_PCT = 0.10   # sustained deviation flag (10%)
+HASHRATE_DEVIATION_PCT = 0.10  # sustained deviation flag (10%)
 HASHRATE_DEVIATION_SEVERE = 0.20  # severe deviation (20%)
 # Source: A 5-min dip can be a pool hiccup. 30 min (6 readings at 5-min
 # intervals) confirms a real operational issue.
@@ -66,10 +66,10 @@ SUSTAINED_MINUTES = 30
 # Source: Cohen's conventions — r > 0.5 is "large effect." Below -0.5 means
 # temperature is strongly impacting hashrate (thermal throttling active).
 # Severity tiers at -0.6 and -0.8 separate moderate from severe coupling.
-CORRELATION_THRESHOLD = -0.5    # minimum r to flag
-CORRELATION_CRITICAL = -0.8     # critical severity
-CORRELATION_HIGH = -0.6         # high severity
-P_VALUE_THRESHOLD = 0.05        # standard statistical significance
+CORRELATION_THRESHOLD = -0.5  # minimum r to flag
+CORRELATION_CRITICAL = -0.8  # critical severity
+CORRELATION_HIGH = -0.6  # high severity
+P_VALUE_THRESHOLD = 0.05  # standard statistical significance
 
 # Pressure thresholds
 # Source: Derived from provided sample data — M003 shows 1.8→2.1 bar (Δ=0.3)
@@ -85,8 +85,8 @@ PRESSURE_CRITICAL_CHANGE = 0.5  # bar — critical severity
 # filters normal operating noise. 1-hour window smooths out short-term
 # fluctuations while still catching real cooling degradation events.
 COOLING_TREND_WINDOW_HOURS = 1  # hours — window for cooling trend analysis
-COOLING_TEMP_RISE_RATE = 3.0    # °C/hour — immersion temp rise for degradation
-COOLING_CHIP_STABLE = 2.0       # °C/hour — chip temp "stable" below this
+COOLING_TEMP_RISE_RATE = 3.0  # °C/hour — immersion temp rise for degradation
+COOLING_CHIP_STABLE = 2.0  # °C/hour — chip temp "stable" below this
 # Source: In well-functioning immersion, chip-to-coolant gradient is typically
 # 30-35% of chip temp. Above 40% indicates poor thermal interface.
 COOLING_EFFECTIVENESS_THRESHOLD = 0.4  # (chip-immersion)/chip — poor above this
@@ -97,16 +97,16 @@ COOLING_EFFECTIVENESS_THRESHOLD = 0.4  # (chip-immersion)/chip — poor above th
 # 10% below fleet median at same temp = hardware problem, not environment.
 # Severity tiers: >30% of readings anomalous = critical (persistent, severe),
 # >10% = warning (recurring), below = info (occasional).
-PEER_TEMP_SIMILARITY = 5.0      # °C — "similar temperature" window
-PEER_HASHRATE_FLOOR = 0.10      # fraction of median — underperformance threshold
-PEER_CRITICAL_PCT = 30          # % anomalous readings — critical severity
-PEER_WARNING_PCT = 10           # % anomalous readings — warning severity
+PEER_TEMP_SIMILARITY = 5.0  # °C — "similar temperature" window
+PEER_HASHRATE_FLOOR = 0.10  # fraction of median — underperformance threshold
+PEER_CRITICAL_PCT = 30  # % anomalous readings — critical severity
+PEER_WARNING_PCT = 10  # % anomalous readings — warning severity
 
 # Optimization
 # Source: 5% tolerance avoids flagging miners marginally above fleet average.
 # 90% of fleet immersion temp = meaningfully overcooled (>10% colder).
 HASHRATE_HEADROOM_TOLERANCE = 1.05  # 5% above fleet avg to count as "benefiting"
-EXCESSIVE_COOLING_RATIO = 0.90      # immersion temp below 90% of fleet avg
+EXCESSIVE_COOLING_RATIO = 0.90  # immersion temp below 90% of fleet avg
 
 # ---------------------------------------------------------------------------
 # Types
@@ -118,6 +118,7 @@ Insight = dict[str, Any]
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def ensure_sorted(df: pd.DataFrame) -> pd.DataFrame:
     """Return a copy sorted by miner_id + timestamp with proper dtypes."""

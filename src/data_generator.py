@@ -7,11 +7,10 @@ anomalies typical of immersion-cooled deployments.
 """
 
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
-
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -23,13 +22,13 @@ DAYS = 7
 START_TIME = datetime(2026, 4, 9, 0, 0, 0)  # 7 days before today
 
 # Normal operating ranges
-HASH_BASE = 110.0        # TH/s centre
-HASH_SPREAD = 10.0       # +/- around base
-CHIP_TEMP_BASE = 77.5    # degC centre (70-85 range)
+HASH_BASE = 110.0  # TH/s centre
+HASH_SPREAD = 10.0  # +/- around base
+CHIP_TEMP_BASE = 77.5  # degC centre (70-85 range)
 CHIP_TEMP_SPREAD = 7.5
-IMM_TEMP_BASE = 51.5     # degC centre (48-55 range)
+IMM_TEMP_BASE = 51.5  # degC centre (48-55 range)
 IMM_TEMP_SPREAD = 3.5
-PRESSURE_BASE = 1.75     # bar centre (1.6-1.9 range)
+PRESSURE_BASE = 1.75  # bar centre (1.6-1.9 range)
 PRESSURE_SPREAD = 0.15
 
 # Thermal throttling threshold
@@ -123,7 +122,7 @@ def generate_site_data(seed: int = RNG_SEED) -> pd.DataFrame:
             episode_starts = rng.uniform(0.5, 6.5, num_episodes)  # day-fraction
             episode_durations = rng.uniform(15, 60, num_episodes) / (24 * 60)  # in day-frac
 
-            for start, dur in zip(episode_starts, episode_durations):
+            for start, dur in zip(episode_starts, episode_durations, strict=True):
                 offline = (day_frac >= start) & (day_frac < start + dur)
                 hashrate[offline] = 0.0
                 chip_temp[offline] = imm_temp[offline]  # cools to coolant temp
@@ -146,14 +145,16 @@ def generate_site_data(seed: int = RNG_SEED) -> pd.DataFrame:
             arr[nan_mask] = np.nan
 
         # Build per-miner frame
-        miner_df = pd.DataFrame({
-            "timestamp": timestamps,
-            "miner_id": miner_id,
-            "hashrate_ths": np.round(hashrate, 2),
-            "chip_temp_c": np.round(chip_temp, 2),
-            "immersion_temp_c": np.round(imm_temp, 2),
-            "immersion_pressure_bar": np.round(pressure, 3),
-        })
+        miner_df = pd.DataFrame(
+            {
+                "timestamp": timestamps,
+                "miner_id": miner_id,
+                "hashrate_ths": np.round(hashrate, 2),
+                "chip_temp_c": np.round(chip_temp, 2),
+                "immersion_temp_c": np.round(imm_temp, 2),
+                "immersion_pressure_bar": np.round(pressure, 3),
+            }
+        )
         rows.append(miner_df)
 
     df = pd.concat(rows, ignore_index=True)
@@ -177,5 +178,6 @@ if __name__ == "__main__":
     print(f"Wrote {len(data):,} rows to {out_path}")
     print(f"Miners: {data['miner_id'].nunique()}")
     print(f"Time range: {data['timestamp'].min()} -> {data['timestamp'].max()}")
-    print(f"NaN cells: {data.isna().sum().sum()} "
-          f"({data.isna().sum().sum() / data.size * 100:.1f}%)")
+    print(
+        f"NaN cells: {data.isna().sum().sum()} ({data.isna().sum().sum() / data.size * 100:.1f}%)"
+    )
