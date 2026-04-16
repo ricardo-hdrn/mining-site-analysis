@@ -102,9 +102,9 @@ def _format_insight(insight: dict) -> str:
     for dline in detail.split("\n"):
         lines.append(f"    {dline.strip()}")
 
-    impact = insight.get("business_impact", "")
-    if impact:
-        lines.append(f"    \u25b8 Impact: {impact}")
+    impact = insight.get("business_impact", {})
+    if isinstance(impact, dict) and impact.get("status") == "estimated":
+        lines.append(f"    \u25b8 Impact: {impact.get('summary', '')}")
 
     action = insight.get("action", "")
     if action:

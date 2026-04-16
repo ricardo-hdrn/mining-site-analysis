@@ -8,7 +8,16 @@
       "detail": "Chip temperature exceeded 90.0\u00b0C in 33.3% of readings (max 92.0\u00b0C).",
       "metric": 92.0,
       "action": "Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation.",
-      "business_impact": "Est. ~10 TH/s lost to throttling during critical periods (33% of time). ~$0.15/day revenue impact."
+      "business_impact": {
+        "summary": "Est. ~10 TH/s lost to throttling during critical periods (33% of time). ~$0.15/day revenue impact.",
+        "hash_price_usd_th_day": 0.045,
+        "method": "thermal_throttling_threshold",
+        "confidence": "medium",
+        "hashrate_loss_ths": 10.0,
+        "revenue_impact_usd_day": 0.15,
+        "pct_time_affected": 33.33,
+        "status": "estimated"
+      }
     },
     {
       "miner_id": "M001",
@@ -16,7 +25,16 @@
       "severity": "critical",
       "detail": "Chip temperature rose 14.0\u00b0C within ~10 min (at 2025-01-01 10:10:00+00:00).",
       "metric": 14.0,
-      "action": "Possible coolant flow interruption or pump failure. Inspect immersion loop immediately."
+      "action": "Possible coolant flow interruption or pump failure. Inspect immersion loop immediately.",
+      "business_impact": {
+        "summary": "Risk signal \u2014 no direct hashrate impact measurable from telemetry.",
+        "status": "not_measurable",
+        "hash_price_usd_th_day": 0.045,
+        "hashrate_loss_ths": 0,
+        "revenue_impact_usd_day": 0,
+        "method": "none",
+        "confidence": "n/a"
+      }
     },
     {
       "miner_id": "M001",
@@ -24,7 +42,16 @@
       "severity": "info",
       "detail": "Miner spent ~5 minutes above 85.0\u00b0C warning threshold.",
       "metric": 5.0,
-      "action": "Review cooling capacity allocation for this miner."
+      "action": "Review cooling capacity allocation for this miner.",
+      "business_impact": {
+        "summary": "Risk signal \u2014 no direct hashrate impact measurable from telemetry.",
+        "status": "not_measurable",
+        "hash_price_usd_th_day": 0.045,
+        "hashrate_loss_ths": 0,
+        "revenue_impact_usd_day": 0,
+        "method": "none",
+        "confidence": "n/a"
+      }
     },
     {
       "miner_id": "M003",
@@ -33,7 +60,16 @@
       "detail": "Chip temperature exceeded 90.0\u00b0C in 33.3% of readings (max 98.0\u00b0C).",
       "metric": 98.0,
       "action": "Immediately reduce load or increase cooling. Inspect immersion fluid level and pump operation.",
-      "business_impact": "Est. ~40 TH/s lost to throttling during critical periods (33% of time). ~$0.60/day revenue impact."
+      "business_impact": {
+        "summary": "Est. ~40 TH/s lost to throttling during critical periods (33% of time). ~$0.60/day revenue impact.",
+        "hash_price_usd_th_day": 0.045,
+        "method": "thermal_throttling_threshold",
+        "confidence": "medium",
+        "hashrate_loss_ths": 40.0,
+        "revenue_impact_usd_day": 0.6,
+        "pct_time_affected": 33.33,
+        "status": "estimated"
+      }
     },
     {
       "miner_id": "M003",
@@ -41,7 +77,16 @@
       "severity": "critical",
       "detail": "Chip temperature rose 18.0\u00b0C within ~10 min (at 2025-01-01 10:10:00+00:00).",
       "metric": 18.0,
-      "action": "Possible coolant flow interruption or pump failure. Inspect immersion loop immediately."
+      "action": "Possible coolant flow interruption or pump failure. Inspect immersion loop immediately.",
+      "business_impact": {
+        "summary": "Risk signal \u2014 no direct hashrate impact measurable from telemetry.",
+        "status": "not_measurable",
+        "hash_price_usd_th_day": 0.045,
+        "hashrate_loss_ths": 0,
+        "revenue_impact_usd_day": 0,
+        "method": "none",
+        "confidence": "n/a"
+      }
     },
     {
       "miner_id": "M003",
@@ -49,7 +94,16 @@
       "severity": "info",
       "detail": "Miner spent ~5 minutes above 85.0\u00b0C warning threshold.",
       "metric": 5.0,
-      "action": "Review cooling capacity allocation for this miner."
+      "action": "Review cooling capacity allocation for this miner.",
+      "business_impact": {
+        "summary": "Risk signal \u2014 no direct hashrate impact measurable from telemetry.",
+        "status": "not_measurable",
+        "hash_price_usd_th_day": 0.045,
+        "hashrate_loss_ths": 0,
+        "revenue_impact_usd_day": 0,
+        "method": "none",
+        "confidence": "n/a"
+      }
     }
   ],
   "cooling": [
@@ -59,7 +113,16 @@
       "severity": "warning",
       "detail": "Pressure spike detected: \u0394=0.300 bar in ~10 min at 2025-01-01 10:10:00+00:00.",
       "metric": 0.3,
-      "action": "Check for leaks, blockages, or pump cavitation in the immersion cooling loop."
+      "action": "Check for leaks, blockages, or pump cavitation in the immersion cooling loop.",
+      "business_impact": {
+        "summary": "Risk signal \u2014 no direct hashrate impact measurable from telemetry.",
+        "status": "not_measurable",
+        "hash_price_usd_th_day": 0.045,
+        "hashrate_loss_ths": 0,
+        "revenue_impact_usd_day": 0,
+        "method": "none",
+        "confidence": "n/a"
+      }
     }
   ],
   "peer_comparison": [],
