@@ -68,6 +68,17 @@ All configurable thresholds are defined in [`src/analyzers/base.py`](src/analyze
 
 ## Production Notes
 
+## Business Impact Estimation
+
+| Parameter | Value | Source |
+|---|---|---|
+| `HASH_PRICE_USD_PER_TH_DAY` | $0.045 | Revenue earned per TH/s per day. Encapsulates BTC price, network difficulty, and block reward. ~$0.045 is approximate as of early 2025. In production, fetched from mempool.space or similar API. |
+| `THROTTLE_SLOPE_THS_PER_C` | 5.0 TH/s per °C | Approximate hashrate loss per degree above critical threshold due to firmware thermal throttling. Derived from observed sample data behavior. |
+
+Business impact is computed as a **separate enrichment pass** after detection (see `src/analyzers/business_impact.py`). This keeps economics decoupled from signal processing — analyzers detect, the enricher translates to dollars.
+
+## Production Notes
+
 In a production deployment, these thresholds should be:
 - **Configurable per miner model** (S21 vs M56S have different thermal envelopes)
 - **Calibrated against historical site data** (6+ months of baseline operation)

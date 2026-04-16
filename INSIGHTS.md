@@ -9,9 +9,12 @@ Every insight emitted by the system follows a standard structure:
   "severity": "critical",
   "detail": "Human-readable explanation with numeric evidence.",
   "metric": -0.90,
-  "action": "Recommended operational response."
+  "action": "Recommended operational response.",
+  "business_impact": "Est. avg 19.2 TH/s lost (~$0.87/day at $0.045/TH/day)."
 }
 ```
+
+The `business_impact` field is optional — present only on insight types where revenue impact is directly estimable (see Business Impact section below).
 
 Severity levels: `critical` → act now, `high` → act today, `warning` → schedule inspection, `info` → monitor.
 
@@ -57,3 +60,17 @@ Severity levels: `critical` → act now, `high` → act today, `warning` → sch
 | `thermal_headroom` | info | Chip temp <70°C but hashrate not above fleet median — overcooled with no benefit. | Headroom (°C below warning) |
 | `excessive_cooling` | info | Immersion temp <90% of fleet median but hashrate not above fleet median. | Immersion temp (°C) |
 | `low_cooling_efficiency` | warning | Cooling efficiency score (hashrate/ΔT) more than 1σ below fleet mean. | Score (TH/s per °C) |
+
+## Business Impact Enrichment
+
+A separate post-processing pass (`src/analyzers/business_impact.py`) adds an optional `business_impact` field to insights where revenue impact is directly estimable. This keeps economics decoupled from detection logic.
+
+| Insight Type | Impact Estimation Method |
+|---|---|
+| `performance_degradation` | Avg hashrate loss (max - mean) × hash price |
+| `sustained_underperformance` | Peak deviation × baseline hashrate × hash price |
+| `critical_temperature` | Throttling estimate (5 TH/s per °C above 90°C) × % time in critical × hash price |
+| `peer_underperformance` | Avg gap below fleet median × hash price |
+| `thermal_headroom` | Conservative overclock potential (1 TH/s per 3°C headroom) × hash price |
+
+Types not listed (pressure anomalies, cooling degradation/ineffective, time above threshold, etc.) represent *risk* signals without directly measurable hashrate loss — no `business_impact` is added.
